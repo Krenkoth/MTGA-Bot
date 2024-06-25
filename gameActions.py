@@ -19,18 +19,18 @@ def mullDecision(gameState, log):
         if "Land" in card["type_line"]:
             landCount += 1
     if landCount > 1 and landCount < 5:
-        pag.moveTo(1740, 1000) # change to keep 7 button
+        pag.moveTo(1140, 875) # change to keep 7 button
         pag.mouseDown()
         time.sleep(0.1)
         pag.mouseUp()
     else:
-        pag.moveTo(1740, 1000) # change to mulligan button
+        pag.moveTo(800, 875) # change to mulligan button
         pag.mouseDown()
         time.sleep(0.1)
         pag.mouseUp()
         gameState.hand = []
         findHand(gameState, log)
-        pag.moveTo(1740, 1000) # change to keep 7 button
+        pag.moveTo(1140, 875) # change to keep 7 button
         pag.mouseDown()
         time.sleep(0.1)
         pag.mouseUp()

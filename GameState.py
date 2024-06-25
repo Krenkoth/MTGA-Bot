@@ -51,11 +51,11 @@ def findHand(gameState, log):
         check = re.search("{ \"transactionId\":.+\"gameObjects\"", line)
         if not (check is None):
             found = True
-            print(line)
     results = re.findall(r"\{ \"instanceId\": \d+, \"grpId\": \d+, .+?, \"zoneId\": 31", line)
+    print(results)
     for card in results:
-        search = re.search("grpId\": [:digit:]+")
-        link = "https://api.scryfall.com/cards/arena/" + search.group()
+        search = re.search("grpId.: [0-9]+", card)
+        link = "https://api.scryfall.com/cards/arena/" + search.group()[8:]
         response = requests.get(link)
         gameState.drawCard(response.json())
     for card in gameState.hand:
