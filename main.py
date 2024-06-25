@@ -1,17 +1,10 @@
 import pyautogui as pag
 import time
+from GameState import *
+from gameActions import *
 # from mtga.set_data import all_mtga_cards
 
-def queue_recent():
-    pag.moveTo(1740, 1000)
-    pag.mouseDown()
-    time.sleep(0.1)
-    pag.mouseUp()
-    
-    time.sleep(0.1)
-    pag.mouseDown()
-    time.sleep(0.1)
-    pag.mouseUp()
+
 
 def follow(file):
     # print(file.tell())
@@ -30,12 +23,19 @@ f = open(
 print(f.readline())
 # line = f.readline()
 log = follow(f)
-print(log.__next__())
-while True:
-    # try:
-    line = log.__next__()
-    print(line)
-    # except S
+print(type(log))
+
+gameState = GameState()
+running = True
+while running:
+    
+    queue_recent()
+
+    findHand(gameState, log)
+
+    mullDecision(gameState,log)
+    
+    
 # while True:
     # file_path = 'C:/Users/johng/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log'
     # with open(file_path, 'r') as file:
