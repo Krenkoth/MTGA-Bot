@@ -16,7 +16,7 @@ def queue_recent():
 def mullDecision(gameState, log):
     landCount = 0
     for card in gameState.hand:
-        if "Land" in card["type_line"]:
+        if "Land" in card.data["type_line"]:
             landCount += 1
     if landCount > 1 and landCount < 5:
         pag.moveTo(1140, 875) # change to keep 7 button
@@ -34,3 +34,6 @@ def mullDecision(gameState, log):
         pag.mouseDown()
         time.sleep(0.1)
         pag.mouseUp()
+    pag.moveTo(0, 0)
+
+# def findCardInHand(cardName):
