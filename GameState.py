@@ -2,6 +2,7 @@
 import requests
 import json
 import time
+import re
 # phases are: begin, main1, main2, combat, oppTurn
 # boards and hand are lists of permanent objects
 
@@ -30,10 +31,16 @@ class GameState:
         self.landDrop = False
 
 
-class permanent:
-    def __init__(self, id):
-        self.id = id
+class Permanent:
+    def __init__(self, data, instanceId):
+        self.data = data
         self.untapped = True
+        self.instanceId = instanceId
+    
+    def __init__(self, card):
+        self.data = card.data
+        self.untapped = True
+        self.instanceId = card.instanceId
     
     def tap(self):
         self.untapped = False
@@ -41,7 +48,13 @@ class permanent:
     def untap(self):
         self.untapped = True
 
-import re
+
+
+class Card:
+    def __init__(self, data, instanceId):
+        self.data = data
+        self.instanceId = instanceId
+
 
 def findHand(gameState, log):
     found = False
@@ -56,10 +69,11 @@ def findHand(gameState, log):
     for card in results:
         search = re.search("grpId.: [0-9]+", card)
         link = "https://api.scryfall.com/cards/arena/" + search.group()[8:]
+        instance = re.search("instanceId.: [0-9]+", card)
         response = requests.get(link)
-        gameState.drawCard(response.json())
+        gameState.drawCard(Card(response.json(), instance.group()[13:]))
     for card in gameState.hand:
-        print(card["name"])
+        print(card.data["name"])
 
 # { "instanceId": 159, "grpId": 66819, "type": "GameObjectType_Card", "zoneId": 31, 
 # "visibility": "Visibility_Private", "ownerSeatId": 1, "controllerSeatId": 1, 
