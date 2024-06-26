@@ -6,7 +6,6 @@ from gameActions import *
 
 
 def follow(file):
-    # print(file.tell())
     file.seek(0, 2)
     while True:
         line = file.readline()
@@ -15,22 +14,26 @@ def follow(file):
         yield line
 
 
-# print(all_mtga_cards.find_one(66819))
 f = open(
     "C:/Users/johng/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log"
 )
 log = follow(f)
-print(type(log))
 
 gameState = GameState()
-running = True
-while running:
     
-    queue_recent()
+queue_recent()
 
-    findHand(gameState, log)
+findHand(gameState, log)
 
-    time.sleep(4)
+wait = True
+while wait:
+    line = log.__next__()
+    check = re.search("Timer PregameSequence end", line)
+    if not line is None:
+        wait = False
+        time.sleep(2)
 
-    mullDecision(gameState,log)
+mullDecision(gameState,log)
+
+# play a turn: land, enchantment if available, creatures
 
