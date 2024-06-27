@@ -19,6 +19,9 @@ f = open(
 )
 log = follow(f)
 
+while True:
+    print(log.__next__())
+
 gameState = GameState()
     
 queue_recent()
@@ -34,6 +37,11 @@ while wait:
         time.sleep(2)
 
 mullDecision(gameState,log)
+
+
+
+# determineNextPlay(gameState)
+
 
 # play a turn: land, enchantment if available, creatures
 

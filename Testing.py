@@ -1,13 +1,14 @@
 import pyautogui as pag
-# f = open(
-#     "C:/Users/johng/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log"
-# )
-# log = follow(f)
+from main import follow
 
-# while True:
+
+f = open(
+    "C:/Users/johng/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log"
+)
+log = follow(f)
     
 while True:
-    print(pag.position())
+    print(log.__next__())
 
-    # 300, 1070
-    # 160, 1070
+    # 260, 1070
+    # 1660, 1070

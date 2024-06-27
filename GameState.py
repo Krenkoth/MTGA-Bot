@@ -64,6 +64,12 @@ def findHand(gameState, log):
         check = re.search("{ \"transactionId\":.+\"gameObjects\"", line)
         if not (check is None):
             found = True
+    turn = re.search("turnInfo.: { .activePlayer.: [0-9]", line)
+    turn = int(turn.group()[29])
+    if turn == 1:
+        gameState.moveTo("main1")
+    else:
+        gameState.moveTo("oppTurn")
     results = re.findall(r"\{ \"instanceId\": \d+, \"grpId\": \d+, .+?, \"zoneId\": 31", line)
     print(results)
     for card in results:
@@ -71,7 +77,7 @@ def findHand(gameState, log):
         link = "https://api.scryfall.com/cards/arena/" + search.group()[8:]
         instance = re.search("instanceId.: [0-9]+", card)
         response = requests.get(link)
-        gameState.drawCard(Card(response.json(), instance.group()[13:]))
+        gameState.drawCard(Card(response.json(), int(instance.group()[13:])))
     for card in gameState.hand:
         print(card.data["name"])
 

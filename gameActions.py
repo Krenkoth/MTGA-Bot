@@ -1,6 +1,7 @@
 import pyautogui as pag
 import time
 from GameState import *
+import re
 
 def queue_recent():
     pag.moveTo(1740, 1000)
@@ -36,4 +37,27 @@ def mullDecision(gameState, log):
         pag.mouseUp()
     pag.moveTo(0, 0)
 
-# def findCardInHand(cardName):
+def findCardInHand(gameState, log, target):
+    pag.moveTo(260, 1079)
+    searching = True
+    while searching:
+        pag.moveRel(100, 0)
+        line = ""
+        found = False
+        while not found and not line is None:
+            line = log.__next__()
+            if "\"onHover\": {" in line:
+                found = True
+        if found:
+            line = log.__next__()
+            search = re.search("objectId.: [0-9]+", line)
+            id = int(search.group()[11:])
+            for card in gameState.hand():
+                if id == id:
+                    searching = False
+        elif pag.position[0] > 1660:
+            return False
+    return True
+            
+# def determineNextPlay(gameState):
+
