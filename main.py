@@ -10,17 +10,14 @@ def follow(file):
     while True:
         line = file.readline()
         if not line:
-            continue
+            yield None
         yield line
 
 
 f = open(
-    "C:/Users/johng/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log"
+    "C:/Users/willi/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log"
 )
 log = follow(f)
-
-while True:
-    print(log.__next__())
 
 gameState = GameState()
     
@@ -31,14 +28,17 @@ findHand(gameState, log)
 wait = True
 while wait:
     line = log.__next__()
-    check = re.search("Timer PregameSequence end", line)
     if not line is None:
-        wait = False
-        time.sleep(2)
+        check = re.search("Timer PregameSequence end", line)
+        if not check is None:
+            wait = False
+            time.sleep(2)
 
 mullDecision(gameState,log)
 
+time.sleep(2)
 
+findCardInHand(gameState, log, gameState.hand[5])
 
 # determineNextPlay(gameState)
 

@@ -61,17 +61,19 @@ def findHand(gameState, log):
     line = ""
     while not found:
         line = log.__next__()
-        check = re.search("{ \"transactionId\":.+\"gameObjects\"", line)
-        if not (check is None):
-            found = True
+        if not line is None:
+            check = re.search("{ \"transactionId\":.+\"gameObjects\"", line)
+            if not (check is None):
+                found = True
     turn = re.search("turnInfo.: { .activePlayer.: [0-9]", line)
     turn = int(turn.group()[29])
     if turn == 1:
-        gameState.moveTo("main1")
+        gameState.goTo("main1")
     else:
-        gameState.moveTo("oppTurn")
+        gameState.goTo("oppTurn")
     results = re.findall(r"\{ \"instanceId\": \d+, \"grpId\": \d+, .+?, \"zoneId\": 31", line)
     print(results)
+    card: Card
     for card in results:
         search = re.search("grpId.: [0-9]+", card)
         link = "https://api.scryfall.com/cards/arena/" + search.group()[8:]
@@ -79,7 +81,7 @@ def findHand(gameState, log):
         response = requests.get(link)
         gameState.drawCard(Card(response.json(), int(instance.group()[13:])))
     for card in gameState.hand:
-        print(card.data["name"])
+        print(card.data["name"], card.instanceId)
 
 # { "instanceId": 159, "grpId": 66819, "type": "GameObjectType_Card", "zoneId": 31, 
 # "visibility": "Visibility_Private", "ownerSeatId": 1, "controllerSeatId": 1, 
