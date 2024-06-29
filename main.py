@@ -38,17 +38,18 @@ mullDecision(gameState,log)
 
 time.sleep(2)
 
-# findCardInHand(log, gameState.hand[5])
-
-for i in range(2):
+while True:
     while(gameState.phase != "Phase_Main1"):
         checkMyTurn(gameState, log)
+    
     if(gameState.phase == "Phase_Main1"):
+        print("--Playing Cards--")
         nextPlay = determineNextPlay(gameState)
         while(not nextPlay is None):
             playCardInHand(gameState, log, nextPlay)
-            time.sleep(1)
+            time.sleep(1.5)
             nextPlay = determineNextPlay(gameState)
+        print("-----------------\n")
             
     time.sleep(1)
             
@@ -63,13 +64,25 @@ for i in range(2):
         
     time.sleep(1)
     
-    while(gameState.phase != "oppTurn"):
+    while(gameState.phase != "Opponent's Turn"):
         passPriority()
         time.sleep(.5)
         checkMyTurn(gameState, log)
-    print("endTurn")
+    
+print("Empty Hand!")
+    
+# gameState.hand = []
+# findHand(gameState, log)
+# print(gameState.hand)
 
+# \w+ AAAA \w+$     
 
+# while True:
+#     line = log.__next__()
+#     if not line is None:
+#         if "\"" in line:
+#             print(line)
+#             print("\n")
 
 
 # play a turn: land, enchantment if available, creatures

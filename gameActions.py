@@ -39,13 +39,21 @@ def mullDecision(gameState: GameState, log):
         gameState.hand = []
         findHand(gameState, log)
         moveToBetter(1140, 875) # change to keep 6 button
-        time.sleep(1)
+        time.sleep(2)
+        pag.mouseDown()
+        time.sleep(0.1)
+        pag.mouseUp()
+        moveToBetter(1250, 540)
+        pag.mouseDown()
+        moveToBetter(320, 540, 1)
+        pag.mouseUp()
+        moveToBetter(960, 875)
         pag.mouseDown()
         time.sleep(0.1)
         pag.mouseUp()
 
 def findCardInHand(log, target: Card):
-    moveToBetter(260, 1060)
+    moveToBetter(100, 1070)
     searching = True
     while searching:
         pag.moveRel(100, 0, .1)
@@ -55,16 +63,24 @@ def findCardInHand(log, target: Card):
             line = log.__next__()
             if not line is None:
                 if "\"onHover\": {" in line and not "\"onHover\": {}" in line:
+                    f = open("demofile2.txt", "a")
+                    f.write(str(line))
+                    f.close()
                     found = True
         if found:
             line = log.__next__()
+            f = open("demofile2.txt", "a")
+            f.write(str(line))
+            f.close()
             search = re.search("objectId.: [0-9]+", line)
             id = int(search.group()[11:])
             # print(id)
             if target.instanceId == id:
                 searching = False
         elif pag.position()[0] > 1660 / 1920.0 * width:
+            print("Not In Hand!\n")
             return False
+    print("Found Card!\n")
     return True
 
 def determineNextPlay(gameState: GameState):
@@ -74,48 +90,54 @@ def determineNextPlay(gameState: GameState):
     for permanent in gameState.myBoard:
         if "Land" in permanent.data["type_line"] and permanent.untapped:
             untappedLands += 1
-    print("open mana:", untappedLands)
-    print(gameState.landDrop)
+    print("Open mana:", untappedLands)
+    print("Land drop available:", gameState.landDrop)
     for card in gameState.hand:
         if "Land" in card.data["type_line"] and gameState.landDrop:
             gameState.playedLand()
-            print("play land")
+            print("Play land")
             return card
     for card in gameState.hand:
         if "Enchantment" in card.data["type_line"]:
             if card.data["name"] == "Cavalcade of Calamity" and untappedLands >= 2:
-                print("play cavalcade")
+                print("Play cavalcade")
                 return card
             elif card.data["name"] == "Raid Bombardment" and untappedLands >= 3:
-                print("play raid")
+                print("Play raid")
                 return card
     for card in gameState.hand:
         if "Creature" in card.data["type_line"] and untappedLands >= 1:
-            print("play creature")
+            print("Play creature")
             return card
-    print("no playable cards")
+    print("No playable cards")
     return None
 
 def playCardInHand(gameState: GameState, log, nextPlay: Card):
-    findCardInHand(log, nextPlay)
-    gameState.playCard(nextPlay)
-    pag.mouseDown()
-    time.sleep(0.05)
-    pag.mouseUp()
-    pag.mouseDown()
-    time.sleep(0.05)
-    pag.mouseUp()
-    i = 0
-    for permanent in gameState.myBoard:
-        if "Land" in permanent.data["type_line"] and permanent.untapped and i < int(nextPlay.data["cmc"]):
-            permanent.tap()
-            i += 1
+    inHand = findCardInHand(log, nextPlay)
+    if inHand:
+        gameState.playCard(nextPlay)
+        time.sleep(.5)
+        pag.mouseDown()
+        time.sleep(0.05)
+        pag.mouseUp()
+        pag.mouseDown()
+        time.sleep(0.05)
+        pag.mouseUp()
+        i = 0
+        for permanent in gameState.myBoard:
+            if "Land" in permanent.data["type_line"] and permanent.untapped and i < int(nextPlay.data["cmc"]):
+                permanent.tap()
+                i += 1
+    else:
+        gameState.hand.remove(nextPlay)
+    moveToBetter(100, 1070)
             
 def passPriority():
     pag.keyDown("space")
     pag.keyUp("space")
 
 def attack():
+    moveToBetter(100, 1070)
     pag.keyDown("space")
     pag.keyUp("space")
     pag.keyDown("space")
