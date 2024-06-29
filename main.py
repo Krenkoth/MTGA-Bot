@@ -32,15 +32,44 @@ while wait:
         check = re.search("Timer PregameSequence end", line)
         if not check is None:
             wait = False
-            time.sleep(2)
+            time.sleep(2.5)
 
 mullDecision(gameState,log)
 
 time.sleep(2)
 
-findCardInHand(gameState, log, gameState.hand[5])
+# findCardInHand(log, gameState.hand[5])
 
-# determineNextPlay(gameState)
+for i in range(2):
+    while(gameState.phase != "Phase_Main1"):
+        checkMyTurn(gameState, log)
+    if(gameState.phase == "Phase_Main1"):
+        nextPlay = determineNextPlay(gameState)
+        while(not nextPlay is None):
+            playCardInHand(gameState, log, nextPlay)
+            time.sleep(1)
+            nextPlay = determineNextPlay(gameState)
+            
+    time.sleep(1)
+            
+    passPriority()
+
+    time.sleep(1)
+
+    gameState.goTo("Phase_Combat")
+
+    if(gameState.phase == "Phase_Combat"):
+        attack()
+        
+    time.sleep(1)
+    
+    while(gameState.phase != "oppTurn"):
+        passPriority()
+        time.sleep(.5)
+        checkMyTurn(gameState, log)
+    print("endTurn")
+
+
 
 
 # play a turn: land, enchantment if available, creatures
