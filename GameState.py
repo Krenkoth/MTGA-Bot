@@ -118,18 +118,25 @@ def checkMyTurn(gameState, log):
         line = log.__next__()
         if not line is None:
             check = re.search("{ \"transactionId\":.+.phase.: .Phase_Beginning.", line)
+            # f = open("demofile2.txt", "a")
+            # f.write(str(line))
+            # f.close()
             if not (check is None):
                 found = True
+            check = re.search("MatchEndScene", line)
+            if not (check is None):
+                return True
     if not line is None:
         turn = re.search(".phase.: .Phase_Beginning., .+?.activePlayer.: [0-9]", line)
-        # print(turn.group())
+        print(turn.group())
         turn = int(turn.group()[len(turn.group()) - 1])
-        # print(turn)
+        print(turn)
         if turn == 2:
             gameState.goTo("Opponent's Turn")
         else:
             gameState.goTo("Phase_Beginning")
             getCardDraw(gameState, line)
+    return False
 
 # { "instanceId": 159, "grpId": 66819, "type": "GameObjectType_Card", "zoneId": 31, 
 # "visibility": "Visibility_Private", "ownerSeatId": 1, "controllerSeatId": 1, 

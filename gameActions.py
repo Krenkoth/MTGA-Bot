@@ -11,12 +11,13 @@ def moveToBetter(x, y, duration = 0.0):
     pag.moveTo(x / 1920.0 * width, y / 1080.0 * height, duration)
 
 def queue_recent():
-    moveToBetter(1740, 1000)
+    moveToBetter(1740, 1000, 1)
+    time.sleep(0.1)
     pag.mouseDown()
     time.sleep(0.1)
     pag.mouseUp()
     
-    time.sleep(0.1)
+    time.sleep(0.5)
     pag.mouseDown()
     time.sleep(0.1)
     pag.mouseUp()
@@ -63,9 +64,9 @@ def findCardInHand(log, target: Card):
             line = log.__next__()
             if not line is None:
                 if "\"onHover\": {" in line and not "\"onHover\": {}" in line:
-                    f = open("demofile2.txt", "a")
-                    f.write(str(line))
-                    f.close()
+                    # f = open("demofile2.txt", "a")
+                    # f.write(str(line))
+                    # f.close()
                     found = True
         if found:
             line = log.__next__()
@@ -135,6 +136,10 @@ def playCardInHand(gameState: GameState, log, nextPlay: Card):
 def passPriority():
     pag.keyDown("space")
     pag.keyUp("space")
+    
+def finishGame():
+    moveToBetter(960, 540)
+    pag.click()
 
 def attack():
     moveToBetter(100, 1070)
