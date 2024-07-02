@@ -4,116 +4,72 @@ from GameState import *
 from gameActions import *
 
 
-
+# tracks the MTGA log file and returns a generator
 def follow(file):
     file.seek(0, 2)
     while True:
         line = file.readline()
-        if not line:
-            yield None
+        if line is None or not line:
+            time.sleep(0.1)
+            continue
         yield line
+name = "johng"
+link = "C:/Users/" + name + "/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log"
+f = open(link)
+log = follow(f)
+line = ""
 
-win_count = 0
-game_count = 0
-GAME_PLAYS = 30
-
-for i in range(GAME_PLAYS):
+gameState = GameState()
     
-    game_count += 1
-    
+queue_recent()
 
-    f = open(
-        "C:/Users/willi/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log"
-    )
-    log = follow(f)
+findHand(gameState, log)
 
-    gameState = GameState()
-        
-    queue_recent()
+wait = True
+while wait:
+    line = log.__next__()
+    if not line is None:
+        check = re.search("Timer PregameSequence end", line)
+        if not check is None:
+            wait = False
+            time.sleep(2.5)
 
-    findHand(gameState, log)
+mullDecision(gameState,log)
 
-    wait = True
-    while wait:
-        line = log.__next__()
-        if not line is None:
-            check = re.search("Timer PregameSequence end", line)
-            if not check is None:
-                wait = False
-                time.sleep(2.5)
+time.sleep(2)
 
-    mullDecision(gameState,log)
+# findCardInHand(log, gameState.hand[5])
 
-    time.sleep(2)
-
-    gameOver = False
-
-    while not gameOver:
-        while(gameState.phase != "Phase_Main1"):
-            passPriority()
-            time.sleep(.5)
-            gameOver = checkMyTurn(gameState, log)
-            if gameOver:
-                print("Game Lost!")
-                break
-        
-        if gameOver:
-            break
-        
-        if(gameState.phase == "Phase_Main1"):
-            print("--Playing Cards--")
+while True:
+    while(gameState.phase != "Phase_Main1"):
+        checkMyTurn(gameState, log)
+    if(gameState.phase == "Phase_Main1"):
+        nextPlay = determineNextPlay(gameState)
+        while(not nextPlay is None):
+            playCardInHand(gameState, log, nextPlay)
+            time.sleep(1)
             nextPlay = determineNextPlay(gameState)
-            while(not nextPlay is None):
-                playCardInHand(gameState, log, nextPlay)
-                time.sleep(1.5)
-                nextPlay = determineNextPlay(gameState)
-            print("-----------------\n")
-                
-        time.sleep(1)
-                
-        passPriority()
-
-        time.sleep(1)
-
-        gameState.goTo("Phase_Combat")
-
-        if(gameState.phase == "Phase_Combat"):
-            attack()
             
-        time.sleep(1)
+    time.sleep(1)
+            
+    passPriority()
+
+    time.sleep(1)
+
+    gameState.goTo("Phase_Combat")
+
+    if(gameState.phase == "Phase_Combat"):
+        attack()
         
-        while(gameState.phase != "Opponent's Turn"):
-            passPriority()
-            time.sleep(.5)
-            gameOver = checkMyTurn(gameState, log)
-            if gameOver:
-                win_count += 1
-                print("Game Won!")
-                break
+    time.sleep(1)
     
-    
-    time.sleep(4)
-    finishGame()
-    time.sleep(4)
-    
-    print("Run Finished!")
-    print("Total Games:", game_count)
-    print("Total Wins:", win_count)
-    print("Total Losses:", game_count - win_count)
-    print("Win Rate:", (win_count + 0.0) / game_count)
-    
-# gameState.hand = []
-# findHand(gameState, log)
-# print(gameState.hand)
+    while(gameState.phase != "oppTurn"):
+        passPriority()
+        time.sleep(.5)
+        checkMyTurn(gameState, log)
+    print("endTurn")
 
-# \w+ AAAA \w+$     
 
-# while True:
-#     line = log.__next__()
-#     if not line is None:
-#         if "\"" in line:
-#             print(line)
-#             print("\n")
 
 
 # play a turn: land, enchantment if available, creatures
