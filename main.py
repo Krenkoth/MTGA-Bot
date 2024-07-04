@@ -19,6 +19,14 @@ f = open(link)
 log = follow(f)
 line = ""
 
+# while True:
+#     print(pag.position())
+
+# while True:
+#     line = log.__next__()
+#     if not line is None:
+#         print(line)
+
 gameState = GameState()
     
 queue_recent()
@@ -38,7 +46,11 @@ mullDecision(gameState,log)
 
 time.sleep(2)
 
-# findCardInHand(log, gameState.hand[5])
+
+
+
+
+
 
 while True:
     while(gameState.phase != "Phase_Main1"):

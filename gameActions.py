@@ -6,12 +6,12 @@ import re
 height = pag.size()[1]
 width = pag.size()[0]
 
-def moveToBetter(x, y, duration = 0.0):
+def moveTo(x, y, duration = 0.0):
     # print((x / 1920.0 * width, y / 1080.0 * height))
     pag.moveTo(x / 1920.0 * width, y / 1080.0 * height, duration)
 
 def queue_recent():
-    moveToBetter(1740, 1000, 1)
+    moveTo(1740, 1000, 1)
     time.sleep(0.1)
     pag.mouseDown()
     time.sleep(0.1)
@@ -28,40 +28,44 @@ def mullDecision(gameState: GameState, log):
         if "Land" in card.data["type_line"]:
             landCount += 1
     if landCount > 1 and landCount < 5:
-        moveToBetter(1140, 875) # change to keep 7 button
+        moveTo(1140, 875) # change to keep 7 button
         pag.mouseDown()
         time.sleep(0.1)
         pag.mouseUp()
     else:
-        moveToBetter(800, 875) # change to mulligan button
+        moveTo(800, 875) # change to mulligan button
         pag.mouseDown()
         time.sleep(0.1)
         pag.mouseUp()
         gameState.hand = []
         findHand(gameState, log)
-        moveToBetter(1140, 875) # change to keep 6 button
+        moveTo(1140, 875) # change to keep 6 button
         time.sleep(2)
         pag.mouseDown()
         time.sleep(0.1)
         pag.mouseUp()
-        moveToBetter(1250, 540)
+        moveTo(1250, 540)
         pag.mouseDown()
-        moveToBetter(320, 540, 1)
+        moveTo(320, 540, 1)
         pag.mouseUp()
-        moveToBetter(960, 875)
+        moveTo(960, 875)
         pag.mouseDown()
         time.sleep(0.1)
         pag.mouseUp()
 
 def findCardInHand(log, target: Card):
-    moveToBetter(100, 1070)
+    moveTo(100, 1070)
     searching = True
     while searching:
+        
         pag.moveRel(100, 0, .1)
+        print("move Right")
         line = ""
         found = False
         while not found and not line is None:
+            print("finding hover message")
             line = log.__next__()
+            print(line)
             if not line is None:
                 if "\"onHover\": {" in line and not "\"onHover\": {}" in line:
                     # f = open("demofile2.txt", "a")
@@ -69,6 +73,7 @@ def findCardInHand(log, target: Card):
                     # f.close()
                     found = True
         if found:
+            print("found hover message")
             line = log.__next__()
             f = open("demofile2.txt", "a")
             f.write(str(line))
@@ -78,6 +83,7 @@ def findCardInHand(log, target: Card):
             # print(id)
             if target.instanceId == id:
                 searching = False
+        
         elif pag.position()[0] > 1660 / 1920.0 * width:
             print("Not In Hand!\n")
             return False
@@ -131,18 +137,18 @@ def playCardInHand(gameState: GameState, log, nextPlay: Card):
                 i += 1
     else:
         gameState.hand.remove(nextPlay)
-    moveToBetter(100, 1070)
+    moveTo(100, 1070)
             
 def passPriority():
     pag.keyDown("space")
     pag.keyUp("space")
     
 def finishGame():
-    moveToBetter(960, 540)
+    moveTo(960, 540)
     pag.click()
 
 def attack():
-    moveToBetter(100, 1070)
+    moveTo(100, 1070)
     pag.keyDown("space")
     pag.keyUp("space")
     pag.keyDown("space")

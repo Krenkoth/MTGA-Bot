@@ -7,8 +7,7 @@ f = open(
 )
 log = follow(f)
     
-while True:
-    print(log.__next__())
+
 
     # 260, 1070
     # 1660, 1070
