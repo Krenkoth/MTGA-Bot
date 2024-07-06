@@ -13,9 +13,9 @@ def follow(file):
             yield None
         yield line
 
-win_count = 0
+win_count = 0 
 game_count = 0
-GAME_PLAYS = 30
+GAME_PLAYS = 1
 
 for i in range(GAME_PLAYS):
     
@@ -39,7 +39,7 @@ for i in range(GAME_PLAYS):
         if not line is None:
             check = re.search("Timer PregameSequence end", line)
             if not check is None:
-                wait = False
+                wait = False               
                 time.sleep(2.5)
 
     mullDecision(gameState,log)

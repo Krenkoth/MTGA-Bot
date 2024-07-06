@@ -44,7 +44,7 @@ def mullDecision(gameState: GameState, log):
         pag.mouseDown()
         time.sleep(0.1)
         pag.mouseUp()
-        moveToBetter(1250, 540)
+        moveToBetter(1250, 540, 1)
         pag.mouseDown()
         moveToBetter(320, 540, 1)
         pag.mouseUp()
@@ -63,10 +63,10 @@ def findCardInHand(log, target: Card):
         while not found and not line is None:
             line = log.__next__()
             if not line is None:
-                if "\"onHover\": {" in line and not "\"onHover\": {}" in line:
-                    # f = open("demofile2.txt", "a")
-                    # f.write(str(line))
-                    # f.close()
+                if "\"onHover\": {" in line and not "\"onHover\": {}" in line and not "\"transactionId\"" in line:
+                    f = open("demofile2.txt", "a")
+                    f.write(str(line))
+                    f.close()
                     found = True
         if found:
             line = log.__next__()

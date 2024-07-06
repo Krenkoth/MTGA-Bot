@@ -71,6 +71,7 @@ def findHand(gameState, log):
                 found = True
     if gameState.phase == "Pregame":
         turn = re.search("turnInfo.: { .activePlayer.: [0-9]", line)
+        
         turn = int(turn.group()[29])
         if turn == 1:
             gameState.goTo("Phase_Main1")
