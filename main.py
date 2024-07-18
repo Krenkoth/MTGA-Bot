@@ -10,7 +10,7 @@ def follow(file):
     while True:
         line = file.readline()
         if line is None or not line:
-            time.sleep(0.1)
+            yield None
             continue
         yield line
 name = "johng"
@@ -53,33 +53,48 @@ time.sleep(2)
 
 
 while True:
-    while(gameState.phase != "Phase_Main1"):
-        checkMyTurn(gameState, log)
-    if(gameState.phase == "Phase_Main1"):
-        nextPlay = determineNextPlay(gameState)
-        while(not nextPlay is None):
-            playCardInHand(gameState, log, nextPlay)
-            time.sleep(1)
-            nextPlay = determineNextPlay(gameState)
-            
-    time.sleep(1)
-            
-    passPriority()
-
-    time.sleep(1)
-
-    gameState.goTo("Phase_Combat")
-
-    if(gameState.phase == "Phase_Combat"):
-        attack()
-        
-    time.sleep(1)
+    line = log.__next__()
     
-    while(gameState.phase != "oppTurn"):
-        passPriority()
-        time.sleep(.5)
-        checkMyTurn(gameState, log)
-    print("endTurn")
+
+    # If there is a new line in the log file
+    
+
+        # else:
+            # print(line)
+                
+                    
+                        
+
+
+
+
+    # while(gameState.phase != "Phase_Main1"):
+    #     checkMyTurn(gameState, log)
+    # if(gameState.phase == "Phase_Main1"):
+    #     nextPlay = determineNextPlay(gameState)
+    #     while(not nextPlay is None):
+    #         playCardInHand(gameState, log, nextPlay)
+    #         time.sleep(1)
+    #         nextPlay = determineNextPlay(gameState)
+            
+    # time.sleep(1)
+            
+    # passPriority()
+
+    # time.sleep(1)
+
+    # gameState.goTo("Phase_Combat")
+
+    # if(gameState.phase == "Phase_Combat"):
+    #     attack()
+        
+    # time.sleep(1)
+    
+    # while(gameState.phase != "oppTurn"):
+    #     passPriority()
+    #     time.sleep(.5)
+    #     checkMyTurn(gameState, log)
+    # print("endTurn")
 
 
 

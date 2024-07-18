@@ -59,21 +59,21 @@ def findCardInHand(log, target: Card):
     while searching:
         
         pag.moveRel(100, 0, .1)
-        print("move Right")
+        # print("move Right")
         line = ""
         found = False
         while not found and not line is None:
-            print("finding hover message")
+            # print("finding hover message")
             line = log.__next__()
-            print(line)
+            # print(line)
             if not line is None:
-                if "\"onHover\": {" in line and not "\"onHover\": {}" in line:
+                if "\"onHover\": {" in line and not r'"onHover": {}' in line:
                     # f = open("demofile2.txt", "a")
                     # f.write(str(line))
                     # f.close()
                     found = True
         if found:
-            print("found hover message")
+            # print("found hover message")
             line = log.__next__()
             f = open("demofile2.txt", "a")
             f.write(str(line))
@@ -85,12 +85,16 @@ def findCardInHand(log, target: Card):
                 searching = False
         
         elif pag.position()[0] > 1660 / 1920.0 * width:
-            print("Not In Hand!\n")
+            # print("Not In Hand!\n")
             return False
-    print("Found Card!\n")
+    # print("Found Card!\n")
     return True
 
 def determineNextPlay(gameState: GameState):
+    print("--Hand--")
+    for card in gameState.hand:
+        print(card.data["name"])
+    print("--------")
     card: Card
     permanent: Permanent
     untappedLands = 0
@@ -141,6 +145,7 @@ def playCardInHand(gameState: GameState, log, nextPlay: Card):
             
 def passPriority():
     pag.keyDown("space")
+    time.sleep(0.1)
     pag.keyUp("space")
     
 def finishGame():
@@ -148,8 +153,11 @@ def finishGame():
     pag.click()
 
 def attack():
+    time.sleep(1)
     moveTo(100, 1070)
     pag.keyDown("space")
+    time.sleep(0.1)
     pag.keyUp("space")
     pag.keyDown("space")
+    time.sleep(0.1)
     pag.keyUp("space")

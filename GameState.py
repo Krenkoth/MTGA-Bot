@@ -8,7 +8,7 @@ import re
 
 class GameState:
     def __init__(self):
-        self.goTo("Pregame")
+        self.goTo('Pregame', 'pregame', 'None')
         self.hand = []
         self.landDrop = True
         self.myBoard = []
@@ -21,18 +21,26 @@ class GameState:
         self.hand.remove(card)
         self.myBoard.append(Permanent(card))
     
-    def goTo(self, phase):
+    def goTo(self, phase, step, turn):
         self.phase = phase
+        self.turn = turn
+        if turn == 1:
+            self.turn = 'Self'
+        elif turn == 2:
+            self.turn = 'Opp'
+        if step is None:
+            self.step = "Main"
+        else:
+            self.step = step
         print("--Phase--")
-        print(phase)
-        print("---------\n")
+        print(self.turn + " " + self.phase + " " + self.step)
+        print("---------")
         if phase == "Phase_Beginning":
             self.landDrop = True
             for perm in self.myBoard:
                 perm.untap()
             time.sleep(4)
-            self.goTo("Phase_Main1")
-        if phase == "Opponent's Turn":
+        if phase == 'Phase_Beginning' and self.turn == "Opp":
             for perm in self.oppBoard:   
                 perm.untap()
                 
@@ -73,10 +81,10 @@ def findHand(gameState, log):
         turn = re.search("turnInfo.: { .activePlayer.: [0-9]", line)
         turn = int(turn.group()[29])
         if turn == 1:
-            gameState.goTo("Phase_Main1")
+            gameState.goTo("Phase_Beginning", None, 'Self')
         else:
-            gameState.goTo("Opponent's Turn")
-    results = re.findall(r"\{ \"instanceId\": \d+, \"grpId\": \d+, .+?, \"zoneId\": 31", line)
+            gameState.goTo("Phase_Beginning", None, 'Opp')
+    results = re.findall('{ "instanceId": [0-9]+, "grpId": [0-9]+, .+?, "zoneId": 31', line)
     for card in results:
         search = re.search("grpId.: [0-9]+", card)
         link = "https://api.scryfall.com/cards/arena/" + search.group()[8:]
