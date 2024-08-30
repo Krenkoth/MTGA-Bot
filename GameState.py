@@ -22,7 +22,6 @@ class GameState:
         self.landDrop = True
         self.myBoard = []
         self.oppBoard = []
-        self.upkeepSkipped = True
 
     def drawCard(self, card):
         self.hand.append(card)
