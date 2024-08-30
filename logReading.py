@@ -70,24 +70,20 @@ def analyzeLine(gameState, log, line):
                 else:
                     print('Not main phase space')
                     space()
-            else:
-                messages = lineDict['greToClientEvent']['greToClientMessages']
-                type = messages[len(messages - 1)]['type']
-                if 'Req' in type:
-                    space()
-            # elif 'GREMessageType_PayCostsReq' in line:
-            #     print('Cost space')
-            #     space()
-            # elif 'GREMessageType_DeclareAttackersReq' in line:
-            #     space()
-            #     time.sleep(0.2)
-            #     space()
+           
+            elif 'GREMessageType_PayCostsReq' in line:
+                print('Cost space')
+                space()
+            elif 'GREMessageType_DeclareAttackersReq' in line:
+                space()
+                time.sleep(0.2)
+                space()
 
-            # elif 'GREMessageType_DeclareBlockersReq' in line:
-            #     space()
+            elif 'GREMessageType_DeclareBlockersReq' in line:
+                space()
 
-            # elif 'GREMessageType_OrderCombatDamageReq' in line:
-            #     space()
+            elif 'GREMessageType_OrderCombatDamageReq' in line:
+                space()
 
             print('Next line\n')
             
