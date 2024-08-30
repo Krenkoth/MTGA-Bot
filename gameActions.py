@@ -149,7 +149,9 @@ def playCardInHand(gameState: GameState, log, nextPlay: Card):
         pag.mouseDown()
         time.sleep(0.05)
         pag.mouseUp()
-        if 'land' not in nextPlay.data["type_line"]:
+        print(nextPlay.data['type_line'])
+        if 'Land' not in nextPlay.data["type_line"]:
+            print('space')
             time.sleep(0.3)
             space()
             time.sleep(0.3)
@@ -172,18 +174,8 @@ def space():
     time.sleep(0.5)
     pag.keyDown("space")
     time.sleep(0.1)
-    pag.keyUp("space")
+    pag.keyUp(" ")
     
 def finishGame():
     moveTo(960, 540)
     pag.click()
-
-def attack():
-    time.sleep(1)
-    moveTo(100, 1070)
-    pag.keyDown("space")
-    time.sleep(0.1)
-    pag.keyUp("space")
-    pag.keyDown("space")
-    time.sleep(0.1)
-    pag.keyUp("space")

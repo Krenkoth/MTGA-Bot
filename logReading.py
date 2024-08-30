@@ -18,6 +18,7 @@ def analyzeLine(gameState, log, line):
         # print(line)
         # check if it is a message with info
         if '"transactionId":'  in line and 'greToClientEvent' in line:
+            time.sleep(1)
             lineDict = json.loads(line)
             if 'turnInfo' in line:
                 messages = lineDict['greToClientEvent']['greToClientMessages']
@@ -61,12 +62,33 @@ def analyzeLine(gameState, log, line):
                 print(gameState.phase, stackEmpty, gameState.turn)
                 if gameState.phase == 'Phase_Main1' and stackEmpty and gameState.turn == 'Self':
                     nextPlay = determineNextPlay(gameState)
-                    playCardInHand(gameState, log, nextPlay)
+                    if nextPlay is None:
+                        space()
+                    else:
+                        playCardInHand(gameState, log, nextPlay)
+                    time.sleep(0.5)
                 else:
-                    print('space')
+                    print('Not main phase space')
                     space()
+            else:
+                messages = lineDict['greToClientEvent']['greToClientMessages']
+                type = messages[len(messages - 1)]['type']
+                if 'Req' in type:
+                    space()
+            # elif 'GREMessageType_PayCostsReq' in line:
+            #     print('Cost space')
+            #     space()
+            # elif 'GREMessageType_DeclareAttackersReq' in line:
+            #     space()
+            #     time.sleep(0.2)
+            #     space()
 
-            elif 'GREMessageType_PayCostsReq' in line:
-                space()
+            # elif 'GREMessageType_DeclareBlockersReq' in line:
+            #     space()
+
+            # elif 'GREMessageType_OrderCombatDamageReq' in line:
+            #     space()
+
+            print('Next line\n')
             
             
