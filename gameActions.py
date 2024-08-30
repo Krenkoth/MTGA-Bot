@@ -12,9 +12,9 @@ def moveTo(x, y, duration = 0.0):
 
 def queue_recent():
     moveTo(1740, 1000, 1)
-    time.sleep(0.1)
+    time.sleep(0.5)
     pag.mouseDown()
-    time.sleep(0.1)
+    time.sleep(0.5)
     pag.mouseUp()
     
     time.sleep(0.5)
@@ -23,6 +23,21 @@ def queue_recent():
     pag.mouseUp()
 
 def mullDecision(gameState: GameState, log):
+
+    pag.keyDown('ctrl')
+    time.sleep(0.2)
+    pag.keyDown('shift')
+    time.sleep(0.5)
+    pag.keyUp('ctrl')
+    pag.keyUp('shift')
+    i = 4
+    while i > 0:
+        line = log.__next__()
+        if not line is None and '[UnityCrossThreadLogger]' in line:
+            i -= 1
+    log.__next__()
+
+
     landCount = 0
     for card in gameState.hand:
         if "Land" in card.data["type_line"]:
@@ -134,6 +149,16 @@ def playCardInHand(gameState: GameState, log, nextPlay: Card):
         pag.mouseDown()
         time.sleep(0.05)
         pag.mouseUp()
+        if 'land' not in nextPlay.data["type_line"]:
+            time.sleep(0.3)
+            space()
+            time.sleep(0.3)
+            space()
+            clearing = True
+            while clearing:
+                line = log.__next__()
+                if 'GREMessageType_ActionsAvailableReq' in line and '"zones":' not in line:
+                    clearing = False
         i = 0
         for permanent in gameState.myBoard:
             if "Land" in permanent.data["type_line"] and permanent.untapped and i < int(nextPlay.data["cmc"]):
@@ -143,7 +168,8 @@ def playCardInHand(gameState: GameState, log, nextPlay: Card):
         gameState.hand.remove(nextPlay)
     moveTo(100, 1070)
             
-def passPriority():
+def space():
+    time.sleep(0.5)
     pag.keyDown("space")
     time.sleep(0.1)
     pag.keyUp("space")

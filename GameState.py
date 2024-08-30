@@ -3,8 +3,17 @@ import requests
 import json
 import time
 import re
-# phases are: begin, main1, main2, combat, oppTurn
-# boards and hand are lists of permanent objects
+
+
+def getCard(id):
+    link = "https://api.scryfall.com/cards/arena/" + id
+    response = requests.get(link).json()
+    if response["object"] == "card":
+        return response
+    else:
+        link = "https://api.scryfall.com/cards/3186f5e2-8078-4fa3-b61e-866c2d4c495d?format=json"
+        print("ERROR, assume Goblin Token")
+        return requests.get(link).json()
 
 class GameState:
     def __init__(self):
@@ -13,6 +22,7 @@ class GameState:
         self.landDrop = True
         self.myBoard = []
         self.oppBoard = []
+        self.upkeepSkipped = True
 
     def drawCard(self, card):
         self.hand.append(card)
@@ -86,11 +96,10 @@ def findHand(gameState, log):
             gameState.goTo("Phase_Beginning", None, 'Opp')
     results = re.findall('{ "instanceId": [0-9]+, "grpId": [0-9]+, .+?, "zoneId": 31', line)
     for card in results:
-        search = re.search("grpId.: [0-9]+", card)
-        link = "https://api.scryfall.com/cards/arena/" + search.group()[8:]
+        id = re.search("grpId.: [0-9]+", card).group()[8:]
         instance = re.search("instanceId.: [0-9]+", card)
-        response = requests.get(link)
-        gameState.drawCard(Card(response.json(), int(instance.group()[13:])))
+        response = getCard(id)
+        gameState.drawCard(Card(response, int(instance.group()[13:])))
     print("--Hand--")
     card: Card
     for card in gameState.hand:
@@ -115,7 +124,9 @@ def getCardDraw(gameState, line):
                 gameState.drawCard(Card(response.json(), instanceId))
         print("--Hand--")
         card: Card
+        print(gameState.hand)
         for card in gameState.hand:
+            print(card.data)
             print(card.data["name"], card.instanceId)
         print("--------\n")
         

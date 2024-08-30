@@ -1,18 +1,12 @@
 import pyautogui as pag
 import time
 from GameState import *
-from gameActions import *
+from gameActions import * 
+from logReading import *
 
 
 # tracks the MTGA log file and returns a generator
-def follow(file):
-    file.seek(0, 2)
-    while True:
-        line = file.readline()
-        if line is None or not line:
-            yield None
-            continue
-        yield line
+
 name = "johng"
 link = "C:/Users/" + name + "/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log"
 f = open(link)
@@ -26,6 +20,22 @@ line = ""
 #     line = log.__next__()
 #     if not line is None:
 #         print(line)
+#         if '{ "transactionId":' in line:
+#         # if '[UnityCrossThreadLogger]' in line and 'GreToClientEvent' in line:
+#             # print(line)
+#             # line = log.__next__()
+#             if 'turnInfo' in line:
+#                 print("Recieved Priority")
+#                 print(line)
+#             else:
+#                 print("SOMETHING HAPPENED AND I DIDNT GET PRIORITY")
+#                 print(line)
+        # gameObjects = re.search('"gameObjects": [ { .+? } ]', line)
+        # if gameObjects is not None:
+        #     gameObjects = gameObjects.group()
+        #     print(gameObjects)
+    # if line is not None:
+    #     print(line)
 
 gameState = GameState()
     
@@ -42,7 +52,11 @@ while wait:
             wait = False
             time.sleep(2.5)
 
+
+
 mullDecision(gameState,log)
+
+
 
 time.sleep(2)
 
@@ -55,49 +69,5 @@ time.sleep(2)
 while True:
     line = log.__next__()
     
-
-    # If there is a new line in the log file
-    
-
-        # else:
-            # print(line)
-                
-                    
-                        
-
-
-
-
-    # while(gameState.phase != "Phase_Main1"):
-    #     checkMyTurn(gameState, log)
-    # if(gameState.phase == "Phase_Main1"):
-    #     nextPlay = determineNextPlay(gameState)
-    #     while(not nextPlay is None):
-    #         playCardInHand(gameState, log, nextPlay)
-    #         time.sleep(1)
-    #         nextPlay = determineNextPlay(gameState)
-            
-    # time.sleep(1)
-            
-    # passPriority()
-
-    # time.sleep(1)
-
-    # gameState.goTo("Phase_Combat")
-
-    # if(gameState.phase == "Phase_Combat"):
-    #     attack()
-        
-    # time.sleep(1)
-    
-    # while(gameState.phase != "oppTurn"):
-    #     passPriority()
-    #     time.sleep(.5)
-    #     checkMyTurn(gameState, log)
-    # print("endTurn")
-
-
-
-
-# play a turn: land, enchantment if available, creatures
+    analyzeLine(gameState, log, line)
 
