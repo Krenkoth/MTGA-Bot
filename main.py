@@ -42,15 +42,25 @@ gameState = GameState()
 queue_recent()
 
 findHand(gameState, log)
-
-wait = True
-while wait:
-    line = log.__next__()
-    if not line is None:
-        check = re.search("Timer PregameSequence end", line)
-        if not check is None:
-            wait = False
-            time.sleep(2.5)
+if gameState.turn == 'Self':
+    wait = True
+    while wait:
+        line = log.__next__()
+        if not line is None:
+            check = re.search("Timer PregameSequence end", line)
+            if not check is None:
+                wait = False
+                time.sleep(2.5)
+else:
+    wait = True
+    while wait:
+        line = log.__next__()
+        if not line is None:
+            check = re.search("GREMessageType_MulliganReq", line)
+            if not check is None:
+                wait = False
+                time.sleep(2.5)
+    
 
 
 

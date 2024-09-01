@@ -50,21 +50,23 @@ def analyzeLine(gameState, log, line):
                         if zone == 28: # if on battlefield
                             if response["object"] != "error":
                                 print(response["name"] + ' on Battlefield')
-                        
+            if gameState.step == 'Step_DeclareAttack':
+                 print(line)
             if 'GREMessageType_ActionsAvailableReq' in line:
-                time.sleep(0.5)
+                time.sleep(3)
                 print('Received priority')
                 # find next play and play it i f nothing on stack
-                search = re.search('"gameObjects": [.+?"zoneId": 27.+?]', line)
+                search = re.search('"gameObjects": [.+?" zoneId": 27.+?]', line)
                 # if (gameState.step == 'Step_Upkeep'):
                 #     print(line)
                 stackEmpty = search == None
-                print(gameState.phase, stackEmpty, gameState.turn)
+                # print(gameState.phase, stackEmpty, gameState.turn)
                 if gameState.phase == 'Phase_Main1' and stackEmpty and gameState.turn == 'Self':
                     nextPlay = determineNextPlay(gameState)
                     if nextPlay is None:
+                        print('no plays space')
                         space()
-                    else:
+                    else: 
                         playCardInHand(gameState, log, nextPlay)
                     time.sleep(0.5)
                 else:
@@ -75,14 +77,15 @@ def analyzeLine(gameState, log, line):
                 print('Cost space')
                 space()
             elif 'GREMessageType_DeclareAttackersReq' in line:
-                space()
-                time.sleep(0.2)
+                print('attackers single space')
                 space()
 
             elif 'GREMessageType_DeclareBlockersReq' in line:
+                print('blockers space')
                 space()
 
             elif 'GREMessageType_OrderCombatDamageReq' in line:
+                print('order damage space')
                 space()
 
             print('Next line\n')
